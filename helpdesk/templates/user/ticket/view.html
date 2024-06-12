@@ -1,0 +1,96 @@
+{% extends 'layouts/app.html' %}
+{% block title %}
+Track Ticket
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container-lg">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center">
+                                <h2 class="text-dark my-5">
+                                    Track Your Ticket
+                                </h2>
+                                <div class="search">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control w-100" id="ticketTrackId" placeholder="Search for ticket" />
+                                    {% csrf_token %}
+                                    <p id="ticketStatus" class="text-danger"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="pb-4" id="ticketDetails">
+                        <div class="container-lg">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 text-center py-5">
+                                    <div id="spanBorder">
+                                        <h3 class="py-2">Ticket Details</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <div id="details">
+            
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="remarks">
+            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let ticket_id = "";
+    let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+    $('#ticketDetails').hide();
+    $('#ticketTrackId').keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            getTicktReplys();
+        }
+    })
+
+    function getTicktReplys() {
+        let ticketToken = $('#ticketTrackId').val();
+        if (ticketToken === "") {
+            $('#ticketStatus').text(`* Please enter a ticket number.`);
+        } else {
+            // Empty error string
+            $('#ticketStatus').text("");
+            $.get('/quick-fix-helper/user/track-ticket/'+ticketToken, function(data){
+                ticket_id = data.ticket_id;
+                $('#ticketDetails').show();
+                $('#details').html(data.ticket);
+                $('#remarks').html(data.ticket_remarks);
+            });
+        }
+    }
+
+    function addTicketReply() {
+        let comment = $('#addComment').val();
+        if(comment != ""){
+            $.post("/quick-fix-helper/user/track-ticket/post-reply", { csrfmiddlewaretoken: csrf_token, comment: comment, ticket_id: ticket_id }, function(res) {
+                getTicktReplys();
+            })
+        } else {
+            $("#error").text("Please enter a reply...");
+        }
+    }
+    
+</script>
+{% endblock %}

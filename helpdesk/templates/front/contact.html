@@ -1,0 +1,54 @@
+{% extends 'layouts/front-app.html' %}
+{% block title %}
+Contact Us Page
+{% endblock %}
+
+{% block content %}
+<!-- contact -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title text-primary">Got Any Questions</h2>
+                <p>Submit the form and confirm your email address at <a href="https://formspree.io/">Formspree</a>.</p>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <form action="{% url 'contact' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="mb-4">
+                        <input type="text" id="name" name="{{ form.name.name }}" value="{{ form.name.value }}" placeholder="Name" class="form-control shadow rounded-0 {% if form.name.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.name.errors }}</div>
+                    </div>
+                    <div class="mb-4">
+                        <input type="email" id="mail" name="{{ form.email.name }}" value="{{ form.email.value }}" placeholder="Email" class="form-control shadow rounded-0 {% if form.email.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.email.errors }}</div>
+                    </div>
+                    <div class="mb-4">
+                        <input type="text" id="subject" name="{{ form.subject.name }}" value="{{ form.subject.value }}" placeholder="Subject" class="form-control shadow rounded-0 {% if form.subject.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.subject.errors }}</div>
+                    </div>
+                    <div class="mb-4">
+                        <textarea name="{{ form.message.name }}" id="message" placeholder="Message" class="form-control shadow rounded-0 {% if form.message.errors %}is-invalid{% endif %}">{{ form.message.value }}</textarea>
+                        <div class="invalid-feedback">{{ form.message.errors }}</div>
+                    </div>
+                    <button type="submit" value="send" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /contact -->
+{% endblock %}

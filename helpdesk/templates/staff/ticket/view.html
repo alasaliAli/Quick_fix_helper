@@ -1,0 +1,96 @@
+{% extends 'layouts/admin-app.html' %}
+
+{% block title %}
+    Manage Tickets
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h2 class="card-title">{{ ticket.subject }} by {{ ticket.user_id.first_name }} {{ ticket.user_id.last_name }}</h2>
+                    </div>
+                    <p class="card-description">
+                        {{ticket.description}}
+                    </p>
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <h3 class="mb-0 text-uppercase">Add Ticket Remarks</h3>
+                    <hr>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="p-4 border rounded">
+                                                <form class="row g-3" action="{% url 'admin.manage-ticket.view' ticket.id %}"
+                                                    method="POST" enctype="multipart/form-data" data-parsley-validate>
+                                                    {% csrf_token %}
+                                                        <label for="{{ form.status_remarks.id_for_label }}" class="form-label">Share your remarks</label>
+                                                        <textarea class="form-control" name="{{ form.status_remarks.name }}">{{ form.status_remarks.value }}</textarea>
+                                                        <div class="text-danger">{{form.status_remarks.errors}}</div>
+                                                    <input type="hidden" name="{{form.ticket_id.name}}" value="{{ ticket.id }}">
+                                                    <button class="btn btn-primary col-4 mt-3" type="submit">Add Remarks</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Status/ Remarks
+                                        </div>
+                                        <div class="card-body">
+                                            {% if ticket.ticket_remarks.count > 0 %}
+                                            {% for status in ticket.ticket_remarks.all|dictsortreversed:'created_at' %}
+                                            <blockquote class="card-bodyquote">
+                                                <div class="d-flex">
+                                                    <div class="chat-user-online">
+                                                        <i class="fadeIn animated bx bx-message-detail"></i>
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-2">
+                                                        <h6 class="mb-0 chat-title">
+                                                            {% if status.added_by_id.is_superuser == True %}
+                                                                Admin | {{ status.added_by.username }}
+                                                            {% else %}
+                                                                Staff | {{ status.added_by.username }}
+                                                            {% endif %}
+                                                        </h6>
+                                                        <p class="mb-0 chat-msg">{{ status.status_remarks }}</p>
+                                                        <div class="chat-time"><small class="text-dark">{{ status.created_at|date:"F j, Y, g:i a" }}</small></div>
+                                                    </div>
+                                                </div>
+                                            </blockquote>
+                                            {% endfor %}
+                                            {% else %}
+                                            <p> No Remarks Found</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

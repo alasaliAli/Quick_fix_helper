@@ -1,0 +1,40 @@
+{% extends 'layouts/admin-app.html' %}
+{% block title %}
+Create Category
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add Ticket Category</h4>
+                    <form class="forms-sample" action="{% url 'admin.manage-category.create' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="{{form.title.id_for_label}}">Title <span class="text-danger">*</span></label>
+                                    <input type="text" name="{{form.title.name}}" value="{{form.title.value}}" class="form-control"  placeholder="Enter Category Title">
+                                    <div class="text-danger">{{form.title.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="{{form.description.id_for_label}}">Title <span class="text-danger">*</span></label>
+                                    <textarea name="{{form.description.name}}" class="form-control" id="" cols="30" rows="10">{{form.description.value}}</textarea>
+                                    <div class="text-danger">{{form.description.errors}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                        <button class="btn btn-light">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'layouts/admin-app.html' %}
+{% block title %}
+Add New Member
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Edit Staff Member</h4>
+                    {% if form.non_field_errors %}
+                    <small class="text-danger">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </small>
+                    {% endif %}
+                    <form class="forms-sample" action="{% url 'admin.manage-staff.edit' staff_member.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.first_name.id_for_label }}">First Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="{{ form.first_name.name }}"
+                                        value="{{ form.first_name.value }}" class="form-control"
+                                        placeholder="Enter First Name">
+                                    <div class="text-danger">{{ form.first_name.errors }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{form.lastname.id_for_label}}">Last Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="{{ form.last_name.name }}" value="{{form.last_name.value}}"
+                                        class="form-control" placeholder="Enter Last Name">
+                                    <div class="text-danger">{{form.last_name.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{form.email.id_for_label}}">Email <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" name="email" value="{{form.email.value}}"
+                                        class="form-control" placeholder="Enter Email">
+                                    <div class="text-danger">{{form.email.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{form.username.id_for_label}}">Username:</label>
+                                <input type="text" name="{{form.username.name}}" value="{{form.username.value}}"
+                                    class="form-control form-control-lg" placeholder="Enter Username">
+                                <div class="text-danger">{{form.username.errors}}</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mr-2">Add Member</button>
+                        <button class="btn btn-light">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

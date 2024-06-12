@@ -1,0 +1,86 @@
+{% extends 'layouts/front-app.html' %}
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block banner %}
+<div class="container section">
+    <div class="row">
+        <div class="col-lg-8 text-center mx-auto">
+            <h1 class="text-white mb-3">Support Center &amp; Knowledge base</h1>
+            <p class="text-white mb-4">Find advice and answers from our support team fast or get in touch</p>
+            <div class="position-relative">
+                <form method="GET">
+                    <input type="text" name="q" class="form-control" placeholder="Search articles">
+                    <button type="submit" class="ti-search search-icon" style="background: none; border: none;"></button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<!-- topics -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <h2 class="section-title">Find your answer by subject</h2>
+            </div>
+            <!-- topic-item -->
+            {% for article in articles %}
+            <div class="col-lg-8 col-sm-8 offset-1 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Article # {{article.id}} - {{article.title}}</h5>
+                        <p class="card-text py-3">{{article.description}}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No articles found.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Pagination links -->
+        <div class="row">
+            <div class="col-12">
+                <ul class="pagination justify-content-center">
+                    {% if articles.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ articles.number }}">{{ articles.number }}</a></li>
+                    {% if articles.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ articles.paginator.num_pages }}">Last</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <!-- /Pagination links -->
+    </div>
+</section>
+<!-- /topics -->
+
+
+
+	<!-- call to action -->
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="section px-3 bg-white shadow text-center">
+						<h2 class="mb-4">Didn&rsquo;t find an answer to your question?</h2>
+						<p class="mb-4">Musce libero nunc, dignissim quis turpis quis, semper vehicula dolor. Suspendisse tincidunt
+							consequat quam.</p>
+						<a href="{% url 'user.create.ticket' %}" class="btn btn-primary">Submit a Ticket Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /call to action -->
+{% endblock %}
